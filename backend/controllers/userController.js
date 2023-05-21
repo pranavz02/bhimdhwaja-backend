@@ -2,7 +2,7 @@ import asyncHandler from 'express-async-handler'
 import generateToken from '../utils/generateToken.js'
 import User from '../models/userModel.js'
 import otpGenerator from 'otp-generator'
-// import Sendotp from '../utils/sendOtp.js'
+import Sendotp from '../utils/sendOtp.js'
 
 // @desc    Auth user & get token
 // @route   POST /api/users/login
@@ -10,10 +10,10 @@ import otpGenerator from 'otp-generator'
 
 const generateOTP = async (phone) => {
   const otp = otpGenerator.generate(6, { upperCaseAlphabets: false, lowerCaseAlphabets: false, specialChars: false });
-  // const phoneString = '91' + phone
-  // const sendOtp = new Sendotp(process.env.AUTH_KEY)
+  const phoneString = '91' + phone
+  const sendOtp = new Sendotp(process.env.AUTH_KEY)
 
-  // sendOtp.send(phoneString, process.env.SENDER_ID, process.env.DLT_TE_ID, otp)
+  sendOtp.send(phoneString, process.env.SENDER_ID, process.env.DLT_TE_ID, otp)
   return otp
 }
 
