@@ -84,8 +84,7 @@ const verifyUser = asyncHandler(async (req, res) => {
   const { phone, otp } = req.body;
   const user = await User.findOne({ phone })
 
-  console.log(user)
-  if (!user) return res.status(401).json({ message: "user not found" })
+  if (!user) return res.status(401).json({ message: "User not found" })
   if (user.verifiedUser) return res.status(400).json({ message: "user already verified" });
 
   if (otp != user.otp)
@@ -228,6 +227,31 @@ const findUser = asyncHandler(async (req, res) => {
   }
 })
 
+const resendOTP = asyncHandler(async (req, res) => {
+  const { phone } = req.body
+
+  const regx = /^[6-9]\d{9}$/;
+  if (!regx.test(phone)) {
+    return res.status(400).json({ message: 'Phone number invalid' })
+  }
+  const user = await User.findOne({ phone })
+
+  if (user) {
+    const otp = await generateOTP(phone)
+    await user.updateOne({
+      otp: otp,
+      verifiedUser: false
+    })
+    res.json({
+      phone: phone,
+      otp: otp,
+      message: 'OTP sent successfully'
+    })
+  } else {
+    return res.status(404).json({ message: 'User not found' })
+  }
+})
+
 const updatePassword = asyncHandler(async (req, res) => {
   const { phone, password } = req.body
   const user = await User.findOne({ phone })
@@ -261,5 +285,6 @@ export {
   getUserById,
   updateUser,
   findUser,
-  updatePassword
+  updatePassword,
+  resendOTP
 }

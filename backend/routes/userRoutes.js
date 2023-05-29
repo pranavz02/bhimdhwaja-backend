@@ -12,6 +12,7 @@ import {
   verifyUser,
   findUser,
   updatePassword,
+  resendOTP,
 } from '../controllers/userController.js'
 import { protect, admin } from '../middleware/authMiddleware.js'
 
@@ -20,6 +21,7 @@ router.post('/login', authUser)
 router.post('/verifyotp', verifyUser)
 router.post('/finduser', findUser)
 router.post('/updatepassword', updatePassword)
+router.post('/resendOTP', resendOTP)
 router
   .route('/profile')
   .get(protect, getUserProfile)
