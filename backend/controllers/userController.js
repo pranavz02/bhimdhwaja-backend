@@ -27,10 +27,10 @@ const authUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({ phone })
 
   if (!user)
-    return res.status(401).json({ message: 'New to Bhimdhwaja' })
+    return res.status(401).json({ message: 'New to Bhimdhwaja? Click on Register' })
   
   const otp = await generateOTP(phone)
-  console.log(otp)
+  // console.log(otp)
   await User.updateOne({ _id: user._id }, { otp: otp });
 
   // if (!user.verifiedUser) return res.status(400).json({ message: "User not verified" })
@@ -59,20 +59,20 @@ const registerUser = asyncHandler(async (req, res) => {
     }
   }
   const otp = await generateOTP(phone)
-  console.log({
-    name,
-    email,
-    phone,
-    password,
-    otp
-  })
+  // console.log({
+  //   name,
+  //   email,
+  //   phone,
+  //   password,
+  //   otp
+  // })
   const user = await User.create({
     name,
     email,
     phone,
     password,
     otp,
-    verifiedUser: false
+    // verifiedUser: false
   })
   if (!user)
     return res.status(400).json({ message: 'Invalid user data' })
@@ -85,12 +85,12 @@ const verifyUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({ phone })
 
   if (!user) return res.status(401).json({ message: "User not found" })
-  if (user.verifiedUser) return res.status(400).json({ message: "user already verified" });
+  // if (user.verifiedUser) return res.status(400).json({ message: "user already verified" });
 
   if (otp != user.otp)
     return res.status(400).json({ message: 'Invalid OTP' })
 
-  await User.updateOne({ _id: user._id }, { verifiedUser: true });
+  // await User.updateOne({ _id: user._id }, { verifiedUser: true });
   res.status(201).json(user.authObj())
 })
 
@@ -213,10 +213,10 @@ const findUser = asyncHandler(async (req, res) => {
 
   if (user) {
     const otp = await generateOTP(phone)
-    console.log(otp)
+    // console.log(otp)
     await user.updateOne({
       otp: otp,
-      verifiedUser: false
+      // verifiedUser: false
     })
     res.json({
       phone: phone,
@@ -240,7 +240,7 @@ const resendOTP = asyncHandler(async (req, res) => {
     const otp = await generateOTP(phone)
     await user.updateOne({
       otp: otp,
-      verifiedUser: false
+      // verifiedUser: false
     })
     res.json({
       phone: phone,
