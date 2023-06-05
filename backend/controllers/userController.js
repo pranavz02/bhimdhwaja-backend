@@ -9,7 +9,7 @@ import Sendotp from '../utils/sendOtp.js'
 // @access  Public
 
 const generateOTP = async (phone) => {
-  const otp = otpGenerator.generate(6, { upperCaseAlphabets: false, lowerCaseAlphabets: false, specialChars: false });
+  const otp = otpGenerator.generate(4, { upperCaseAlphabets: false, lowerCaseAlphabets: false, specialChars: false });
   const phoneString = '91' + phone
   const sendOtp = new Sendotp(process.env.AUTH_KEY)
 
