@@ -17,6 +17,28 @@ const generateOTP = async (phone) => {
   return otp
 }
 
+const authViaPassword = asyncHandler(async (req, res) => {
+  const { phone, password } = req.body
+  const regx = /^[6-9]\d{9}$/;
+  if (!regx.test(phone)) {
+    return res.status(400).json({ message: 'Enter a valid phone number' })
+  }
+  const user = await User.findOne({ phone })
+  if (!user)
+    return res.status(401).json({ message: 'New to Bhimdhwaja? Click on Register' })
+
+    if (user && (await user.matchPassword(password))) {
+      res.json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+        token: generateToken(user._id),
+      })
+    } else {
+      res.status(401).json({message: 'Invalid password'})
+    }
+})
 
 const authUser = asyncHandler(async (req, res) => {
   const { phone } = req.body
@@ -275,6 +297,7 @@ const updatePassword = asyncHandler(async (req, res) => {
 })
 
 export {
+  authViaPassword,
   authUser,
   registerUser,
   verifyUser,
