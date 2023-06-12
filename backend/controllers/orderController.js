@@ -89,7 +89,7 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
   const options = { timeZone: 'Asia/Kolkata' }; // Replace 'YOUR_TIME_ZONE' with your desired time zone, e.g., 'America/New_York'
   const formattedDate = now.toLocaleString('en-US', options);
     order.isDelivered = true
-    order.deliveredAt = formattedDate
+    order.deliveredAt = formattedDate.toString()
 
     const updatedOrder = await order.save()
 
