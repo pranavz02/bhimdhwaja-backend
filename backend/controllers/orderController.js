@@ -1,6 +1,8 @@
 import asyncHandler from 'express-async-handler'
 import Order from '../models/orderModel.js'
 
+
+
 // @desc    Create new order
 // @route   POST /api/orders
 // @access  Private
@@ -83,8 +85,11 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id)
 
   if (order) {
+    const now = new Date();
+  const options = { timeZone: 'Asia/Kolkata' }; // Replace 'YOUR_TIME_ZONE' with your desired time zone, e.g., 'America/New_York'
+  const formattedDate = now.toLocaleString('en-US', options);
     order.isDelivered = true
-    order.deliveredAt = Date()
+    order.deliveredAt = formattedDate
 
     const updatedOrder = await order.save()
 
