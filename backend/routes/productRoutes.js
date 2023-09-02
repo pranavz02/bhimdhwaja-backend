@@ -21,7 +21,7 @@ router
   .get(getProductById)
   .delete(protect, admin, deleteProduct)
   .put(protect, admin, updateProduct)
-router.post('/upload/:id', upload.single('image'), async (req, res) => {
+router.post('/upload/:id',protect, admin, upload.single('image'), async (req, res) => {
   try {
     const path = req.file.path;
     const images = await cloudinary.uploader.upload(path, {folder: 'products', resource_type: "image", public_id: req.params.id})
