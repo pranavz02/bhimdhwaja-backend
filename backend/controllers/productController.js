@@ -1,5 +1,6 @@
 import asyncHandler from 'express-async-handler'
 import Product from '../models/productModel.js'
+import {v2 as cloudinary} from 'cloudinary'
 
 const getProducts = asyncHandler(async (req, res) => {
   const pageSize = 100
@@ -42,14 +43,12 @@ const getProductById = asyncHandler(async (req, res) => {
 
 const deleteProduct = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id)
-
-  if (product) {
-    await product.remove()
-    res.json({ message: 'Product removed' })
-  } else {
-    res.status(404)
-    throw new Error('Product not found')
-  }
+  if(!product) res.status(404).json({message: 'Product not found'})
+  const public_id = 'products/' + req.params.id
+  const status = await cloudinary.uploader.destroy(public_id)
+  if(status.result === 'not found') res.status(404).json({message: 'Product not found'})
+  await product.remove()
+  res.status(200).json({ message: 'Product removed' })
 })
 
 // @desc    Create a product
@@ -162,5 +161,5 @@ export {
   createProduct,
   updateProduct,
   createProductReview,
-  getTopProducts,
+  getTopProducts
 }
